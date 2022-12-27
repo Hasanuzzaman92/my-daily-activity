@@ -1,10 +1,16 @@
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import SmallSpinner from "../../components/Spinner/SmallSpinner";
 import { AuthContext } from "../../context/AuthProvider";
 
 const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, signInWithGoogle, loading, setLoading } =
+    useContext(AuthContext);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -17,11 +23,26 @@ const SignUp = () => {
       .then((result) => {
         console.log(result.user);
         toast.success("New user create success");
+        setLoading(false);
+        navigate(from, { replace: true });
       })
       .catch((err) => console.log(err));
 
     event.target.reset();
   };
+
+  const handleGoogleLogIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        toast.success("google login successfull");
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  };
+
   return (
     <div className="w-full mx-auto max-w-md p-8 space-y-3 rounded-xl dark:dark:dark:bg-gray-900 dark:dark:dark:text-gray-100">
       <h1 className="text-2xl font-bold text-center">Sign Up</h1>
@@ -75,7 +96,7 @@ const SignUp = () => {
           <p></p>
         </div>
         <button className="block bg-sky-500 text-white w-full p-3 text-center rounded-sm dark:dark:dark:text-gray-900 dark:dark:dark:bg-yellow-400">
-          Sign Up
+          {loading ? <SmallSpinner /> : "Sign Up"}
         </button>
       </form>
       <div className="flex items-center pt-4 space-x-1">
@@ -86,7 +107,11 @@ const SignUp = () => {
         <div className="flex-1 h-px sm:w-16 dark:dark:dark:bg-gray-700"></div>
       </div>
       <div className="flex justify-center space-x-4">
-        <button aria-label="Log in with Google" className="p-3 rounded-sm">
+        <button
+          onClick={handleGoogleLogIn}
+          aria-label="Log in with Google"
+          className="p-3 rounded-sm"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 32 32"

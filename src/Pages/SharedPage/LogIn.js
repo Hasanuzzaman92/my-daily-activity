@@ -1,11 +1,18 @@
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import SmallSpinner from "../../components/Spinner/SmallSpinner";
 import { AuthContext } from "../../context/AuthProvider";
 
 const LogIn = () => {
   const [error, setError] = useState("");
-  const { signin,  } = useContext(AuthContext);
+  const [userEmail, setUserEmail] = useState("");
+  const { signin, signInWithGoogle, loading, setLoading, resetPassword } =
+    useContext(AuthContext);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,17 +23,37 @@ const LogIn = () => {
       .then((result) => {
         console.log(result.user);
         toast.success("Login successfull ....!");
+        navigate(from, { replace: true });
       })
       .catch((err) => {
         console.log(err);
         setError(err.message);
+        setLoading(false);
       });
+
+    event.target.reset();
   };
 
-  const handleGoogleLogIn = () =>{
+  const handleGoogleLogIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        toast.success("google login successfull");
+        navigate(from, { replace: true });
+      })
+      .catch((err) => console.log(err));
+  };
 
-  }
-
+  const handleReset = () => {
+    resetPassword(userEmail)
+      .then(() => {
+        toast.success("Please check your email for reset link");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+        console.log(err);
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="w-full mx-auto max-w-md p-8 space-y-3 rounded-xl dark:dark:dark:bg-gray-900 dark:dark:dark:text-gray-100">
@@ -42,6 +69,7 @@ const LogIn = () => {
             Email:
           </label>
           <input
+            onBlur={(event) => setUserEmail(event.target.value)}
             required
             type="email"
             name="email"
@@ -66,14 +94,17 @@ const LogIn = () => {
             className="w-full border-2 px-4 py-3 rounded-md dark:dark:dark:border-gray-700 dark:dark:dark:bg-gray-900 dark:dark:dark:text-gray-100 focus:dark:dark:dark:border-yellow-400"
           />
           <div className="flex justify-end text-xs dark:dark:dark:text-gray-400">
-            <span className="text-red-500 cursor-pointer hover:underline">
+            <span
+              onClick={handleReset}
+              className="text-red-500 cursor-pointer hover:underline"
+            >
               Forgot Password?
             </span>
           </div>
           <p className="text-red-400 text-sm">{error}</p>
         </div>
         <button className="block bg-sky-500 text-white w-full p-3 text-center rounded-sm dark:dark:dark:text-gray-900 dark:dark:dark:bg-yellow-400">
-          Log in
+          {loading ? <SmallSpinner /> : "Log In"}
         </button>
       </form>
       <div className="flex items-center pt-4 space-x-1">
@@ -84,7 +115,11 @@ const LogIn = () => {
         <div className="flex-1 h-px sm:w-16 dark:dark:dark:bg-gray-700"></div>
       </div>
       <div className="flex justify-center space-x-4">
-        <button aria-label="Log in with Google" className="p-3 rounded-sm">
+        <button
+          onClick={handleGoogleLogIn}
+          aria-label="Log in with Google"
+          className="p-3 rounded-sm"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 32 32"
