@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
+import { FaMoon, FaSun } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(false);
 
   const handleLogOut = () => {
     logout();
@@ -12,6 +14,15 @@ const Navbar = () => {
 
   const menuItems = (
     <>
+      <li>
+        <Link
+          href="/"
+          onClick={() => setTheme(!theme)}
+          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+        >
+          {theme ? <FaSun></FaSun> : <FaMoon></FaMoon>}
+        </Link>
+      </li>
       {user?.uid ? (
         <>
           <li>

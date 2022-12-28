@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../Layout/Main";
+import AddTask from "../Pages/AddTask/AddTask";
+import CompletedTask from "../Pages/CompletedTask/CompletedTask";
 import ErrorPage from "../Pages/ErrorPages/ErrorPage";
-import Home from "../Pages/Home/Home";
+import MyTask from "../Pages/MyTask/MyTask";
 import LogIn from "../Pages/SharedPage/LogIn";
 import SignUp from "../Pages/SharedPage/SignUp";
 
@@ -13,7 +15,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <AddTask />,
+      },
+      {
+        path: "/addtask",
+        element: <AddTask />,
+      },
+      {
+        path: "/mytask",
+        element: <MyTask />,
+      },
+      {
+        path: "/completedtask",
+        element: <CompletedTask />,
       },
       {
         path: "/login",
