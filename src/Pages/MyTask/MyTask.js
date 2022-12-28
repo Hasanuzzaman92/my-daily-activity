@@ -2,7 +2,7 @@ import React from "react";
 
 const MyTask = () => {
   return (
-    <div className="container p-2 mx-auto sm:p-4 dark:dark:text-gray-800">
+    <div className="container m-3 p-2 mx-auto sm:p-4 dark:bg-gray-700 dark:text-gray-100">
       <h2 className="mb-4 text-3xl font-medium">My Tasks</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full text-lg">
@@ -31,7 +31,7 @@ const MyTask = () => {
                 <p>fjsdoifwerjwiwjj klfjsdfiowe jgoirwhrf jfsklfusif eirkjf </p>
               </td>
               <td className="p-3">
-                <select className="p-1 border-2 border-black dark:border-white">
+                <select className="p-1 border-2 border-black dark:border-white dark:text-gray-700">
                   <option selected value="" key="">
                     Actions
                   </option>

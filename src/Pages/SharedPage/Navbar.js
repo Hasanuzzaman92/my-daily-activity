@@ -1,12 +1,33 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthProvider";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState(false);
+  const [isDark, setIsDark] = useState(null);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setIsDark("dark");
+    } else {
+      setIsDark("light");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isDark === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
+
+  const handleThemeSwitch = () => {
+    setIsDark(isDark === "dark" ? "light" : "dark");
+  };
 
   const handleLogOut = () => {
     logout();
@@ -18,36 +39,52 @@ const Navbar = () => {
         <Link
           href="/"
           onClick={() => setTheme(!theme)}
-          className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+          className="font-medium tracking-wide text-gray-700 dark:text-white transition-colors duration-200 hover:text-deep-purple-accent-400"
         >
-          {theme ? <FaSun></FaSun> : <FaMoon></FaMoon>}
+          {theme ? (
+            <FaSun onClick={handleThemeSwitch}></FaSun>
+          ) : (
+            <FaMoon onClick={handleThemeSwitch}></FaMoon>
+          )}
         </Link>
       </li>
       {user?.uid ? (
         <>
           <li>
-            <a
-              href="/addtask"
-              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+            <NavLink
+              to="/addtask"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold tracking-wide text-sky-500 underline transition-colors duration-200 hover:text-deep-purple-accent-400"
+                  : "font-medium tracking-wide text-gray-700 dark:text-gray-100 transition-colors duration-200 hover:text-deep-purple-accent-400"
+              }
             >
               Add Task
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/mytask"
-              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+            <NavLink
+              to="/mytask"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold tracking-wide text-sky-500 underline transition-colors duration-200 hover:text-deep-purple-accent-400"
+                  : "font-medium tracking-wide text-gray-700 dark:text-gray-100 transition-colors duration-200 hover:text-deep-purple-accent-400"
+              }
             >
               My Task
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a
-              href="/completedtask"
-              className="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400"
+            <NavLink
+              to="/completedtask"
+              className={({ isActive }) =>
+                isActive
+                  ? "font-semibold tracking-wide text-sky-500 underline transition-colors duration-200 hover:text-deep-purple-accent-400"
+                  : "font-medium tracking-wide text-gray-700 dark:text-gray-100 transition-colors duration-200 hover:text-deep-purple-accent-400"
+              }
             >
               Completed Task
-            </a>
+            </NavLink>
           </li>
           <li>
             <Link
