@@ -1,6 +1,10 @@
-import React from "react";
+import { Button } from "flowbite-react";
+import React, { useState } from "react";
+import MyTaskModal from "./MyTaskModal";
 
 const MyTask = () => {
+  const [visible, setVisible] = useState(false);
+
   return (
     <div className="container m-3 p-2 mx-auto sm:p-4 dark:bg-gray-700 dark:text-gray-100">
       <h2 className="mb-4 text-3xl font-medium">My Tasks</h2>
@@ -30,31 +34,32 @@ const MyTask = () => {
               <td className="p-3">
                 <p>fjsdoifwerjwiwjj klfjsdfiowe jgoirwhrf jfsklfusif eirkjf </p>
               </td>
-              <td className="p-3">
-                <select className="p-1 border-2 border-black dark:border-white dark:text-gray-700">
-                  <option selected value="" key="">
-                    Actions
-                  </option>
-                  <option value="" key="">
-                    Edit
-                  </option>
-                  <option value="" key="">
-                    Delete
-                  </option>
-                </select>
+              <td className="p-3 flex items-center">
+                <Button
+                  className="bg-sky-500"
+                  size="xs"
+                  onClick={() => setVisible(true)}
+                >
+                  Edit
+                </Button>
+                <Button className="ml-2" size="xs" color="failure">
+                  Delete
+                </Button>
               </td>
               <td className="p-3">
-                <button
+                <Button
+                  size="sm"
                   type="submit"
-                  className=" bg-sky-500 text-white px-3 py-1 font-semibold rounded-md dark:dark:bg-indigo-600 dark:dark:text-gray-50"
+                  className=" text-white px-3 py-1 font-semibold rounded-md dark:dark:bg-indigo-600 dark:dark:text-gray-50"
                 >
                   <span>Completed</span>
-                </button>
+                </Button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+      <MyTaskModal visible={visible} setVisible={setVisible} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const AddTask = () => {
   // imgbb_url="https://api.imgbb.com/1/upload?expiration=600&key=YOUR_CLIENT_API_KEY"
@@ -6,7 +7,7 @@ const AddTask = () => {
   return (
     <section className="p-6 dark:bg-gray-900 dark:text-gray-100">
       <form
-        novalidate=""
+        noValidate=""
         action=""
         className="container flex flex-col mx-auto space-y-12 ng-untouched ng-pristine ng-valid"
       >
@@ -56,15 +57,17 @@ const AddTask = () => {
                 type="file"
                 accept="image/*"
                 placeholder="Photo url"
-                className="w-full p-1 rounded-md dark:border-gray-300 dark:text-gray-900"
+                className="w-full p-1 rounded-md dark:border-gray-300 dark:text-gray-200"
               />
               <div className="flex items-center space-x-2">
-                <button
-                  type="button"
-                  className="px-4 py-2 border bg-sky-500 mt-5 text-white rounded-md dark:border-gray-800"
-                >
-                  Add Task
-                </button>
+                <Link to="/mytask">
+                  <button
+                    type="button"
+                    className="px-4 py-2 border bg-sky-500 mt-5 text-white rounded-md dark:border-gray-800"
+                  >
+                    Add Task
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
