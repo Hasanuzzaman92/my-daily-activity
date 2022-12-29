@@ -1,10 +1,36 @@
 import { Button, Modal } from "flowbite-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
-const MyTaskModal = ({ visible, setVisible }) => {
+const MyTaskModal = ({ visible, setVisible, task }) => {
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    fetch(`https://my-daily-activity-server.vercel.app/addtask/${tasks._id}`)
+      .then((res) => res.json())
+      .then((data) => setTasks(data));
+  }, []);
+
+  const handleUpdatedTask = (event) => {
+    event.preventDefault();
+    fetch(`https://my-daily-activity-server.vercel.app/addtask/${tasks._id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(tasks),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.modifiedCount > 0) {
+          toast.success("Task successfully updated");
+          console.log(data);
+        }
+      });
+  };
+
   return (
     <Modal show={visible} onClose={() => setVisible(false)}>
-      <Modal.Header>Terms of Service</Modal.Header>
+      <Modal.Header> title</Modal.Header>
       <Modal.Body>
         <form
           noValidate=""
@@ -54,8 +80,7 @@ const MyTaskModal = ({ visible, setVisible }) => {
                 </label>
                 <input
                   name="photo"
-                  type="file"
-                  accept="image/*"
+                  type="text"
                   placeholder="Photo url"
                   className="w-full p-1 rounded-md dark:border-gray-300 dark:text-gray-200"
                 />
@@ -65,7 +90,7 @@ const MyTaskModal = ({ visible, setVisible }) => {
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <Button>Update</Button>
+        <Button onClick={handleUpdatedTask}>Update</Button>
         <Button color="failure" onClick={() => setVisible(false)}>
           Cancel
         </Button>

@@ -1,12 +1,48 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddTask = () => {
-  // imgbb_url="https://api.imgbb.com/1/upload?expiration=600&key=YOUR_CLIENT_API_KEY"
+  const navigate = useNavigate();
+  const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_IMGBB_KEY}`;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const title = e.target.title.value;
+    const subTitle = e.target.sub_title.value;
+    const details = e.target.details.value;
+
+    // photo upload
+    const photoURL = e.target.photo.value;
+
+    const taskData = {
+      title,
+      subTitle,
+      details,
+      photoURL,
+    };
+
+    fetch("https://my-daily-activity-server.vercel.app/addtask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Task added successfull");
+        e.target.reset();
+        console.log(data);
+      });
+
+    navigate("/mytask");
+  };
 
   return (
     <section className="p-6 dark:bg-gray-900 dark:text-gray-100">
       <form
+        onSubmit={handleSubmit}
         noValidate=""
         action=""
         className="container flex flex-col mx-auto space-y-12 ng-untouched ng-pristine ng-valid"
@@ -54,20 +90,17 @@ const AddTask = () => {
               </label>
               <input
                 name="photo"
-                type="file"
-                accept="image/*"
+                type="text"
                 placeholder="Photo url"
                 className="w-full p-1 rounded-md dark:border-gray-300 dark:text-gray-200"
               />
               <div className="flex items-center space-x-2">
-                <Link to="/mytask">
-                  <button
-                    type="button"
-                    className="px-4 py-2 border bg-sky-500 mt-5 text-white rounded-md dark:border-gray-800"
-                  >
-                    Add Task
-                  </button>
-                </Link>
+                <button
+                  type="submit"
+                  className="px-4 py-2 border bg-sky-500 mt-5 text-white rounded-md dark:border-gray-800"
+                >
+                  Add Task
+                </button>
               </div>
             </div>
           </div>
